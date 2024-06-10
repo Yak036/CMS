@@ -140,7 +140,7 @@ new #[Layout('layouts.guest')] class extends Component
             'city' => [ 'string', 'max:100'],
             'adress' => [ 'string', 'min:10', 'max:100'],
             'nacionality' => [ 'alpha', 'max:100'],
-            'dateBirth' => ['required', 'max:100'],
+            'dateBirth' => ['required', 'date', 'before:-15 years', 'after: 70 years'],
             'facebook' => ['string', 'max:250', new FacebookUrl],
             'instagram' => [ 'string', 'max:250', new InstagramUrl],
             'tiktok' => [ 'string', 'max:250', new TikTokUrl],
