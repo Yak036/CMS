@@ -60,9 +60,11 @@ new #[Layout('layouts.guest')] class extends Component
         ])->get('https://www.universal-tutorial.com/api/countries');
 
         $this->countries = $countriesResponse->json();
+        
     }
 
     public function mostrarEstados(){
+      $this->nacionality = $this->country;
       $this->state = '';
       $this->states = [];
       $this->cities = [];
@@ -256,7 +258,7 @@ new #[Layout('layouts.guest')] class extends Component
     <!-- nacionalidad -->
     <div class="w-1/2 pr-2">
       <x-input-label for="nacionality" :value="__('Nacionalidad')" />
-      <x-text-input wire:model="nacionality" id="nacionality" class="block mt-1 w-full" type="text" name="nacionality"
+      <x-text-input wire:model="nacionality" id="nacionality" class="block mt-1 w-full bg-gray-200 cursor-not-allowed" type="text" name="nacionality"
         required autocomplete="nacionality" />
       <x-input-error :messages="$errors->get('nacionality')" class="mt-2" />
     </div>

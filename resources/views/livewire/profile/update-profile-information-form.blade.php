@@ -57,11 +57,6 @@ new class extends Component
         $this->nacionality = Auth::user()->nacionality;
         $this->dateBirth = Auth::user()->dateBirth;
 
-        $this->facebook = Auth::user()->facebook;
-        $this->instagram = Auth::user()->instagram;
-        $this->tiktok = Auth::user()->tiktok;
-        $this->x = Auth::user()->x;
-        $this->personalPage = Auth::user()->personalPage;
 
         $this->token = '';
         $this->states= [];
@@ -101,6 +96,29 @@ new class extends Component
         }
     }
 
+    public function mostrarEstados(){
+        if (!empty($this->country)) {
+            $this->nacionality = $this->country;
+            $this->state = '';
+            $this->states = [];
+            $this->cities = [];
+            $this->city = '';
+            $statesResponse = Http::withHeaders([
+                "Authorization"=> "Bearer ". $this->token,
+                "Accept"=> "application/json"
+            ])->get('https://www.universal-tutorial.com/api/states/'.$this->country);
+            
+            $this->states = $statesResponse->json();
+        }
+    }
+    public function mostrarCiudades(){
+        $citiesResponse = Http::withHeaders([
+            "Authorization"=> "Bearer ". $this->token,
+            "Accept"=> "application/json"
+        ])->get('https://www.universal-tutorial.com/api/cities/'.$this->state);
+        
+        $this->cities = $citiesResponse->json();
+    }
 
     /**
      * Update the profile information for the currently authenticated user.
@@ -113,19 +131,13 @@ new class extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
             'surname' => ['required', 'alpha', 'max:255'],
-            'license' => ['required', 'string', 'max:30','unique:'.User::class],
+            'license' => ['required', 'string', 'max:30',Rule::unique(User::class)->ignore($user->id)],
             'country' => ['required'],
             'state' => [ 'required','string', 'max:100'],
             'city' => [ 'string', 'max:100'],
             'adress' => [ 'string', 'min:10', 'max:100'],
             'nacionality' => [ 'alpha', 'max:100'],
             'dateBirth' => ['required', 'max:100'],
-            'facebook' => ['string', 'max:250', new FacebookUrl],
-            'instagram' => [ 'string', 'max:250', new InstagramUrl],
-            'tiktok' => [ 'string', 'max:250', new TikTokUrl],
-            'x' => [ 'string', 'max:250', new XUrl],
-            'personalPage' => ['string', 'max:250', new https],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user->fill($validated);
@@ -269,7 +281,7 @@ new class extends Component
     <!-- nacionalidad -->
     <div class="mt-4">
       <x-input-label for="nacionality" :value="__('Nacionalidad')" />
-      <x-text-input wire:model="nacionality" id="nacionality" class="block mt-1 w-full" type="text" name="nacionality"
+      <x-text-input wire:model="nacionality" id="nacionality" class="block mt-1 w-full bg-gray-200 cursor-not-allowed" type="text" name="nacionality"
         required autocomplete="nacionality" />
       <x-input-error :messages="$errors->get('nacionality')" class="mt-2" />
     </div>
