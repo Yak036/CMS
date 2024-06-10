@@ -1,0 +1,1 @@
+{{-- <img src="{{ asset('logo.png') }}" class="w-1/2 h-auto"> --}}
